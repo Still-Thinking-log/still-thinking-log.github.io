@@ -1,0 +1,8 @@
+# macOS metadata
+.DS_Store
+
+# Browser automation snapshots
+/.playwright-cli/
+
+# Generated screenshots and design drafts
+/output/
