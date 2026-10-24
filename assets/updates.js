@@ -1,5 +1,8 @@
 // 공개 프로젝트의 주요 기능 기록.
 const updates = [
+  ['exchange','2026-07-18','전략 · 개선','통화별 Swing 전략 개선','달러와 엔화에 서로 다른 Swing 전략 조건을 적용하고 과거 데이터 평가 기록을 정리했습니다.',''],
+  ['exchange','2026-04-26','웹 · 기능 추가','환율 전략 시뮬레이션과 차트','전략별 과거 성과를 비교하는 대시보드와 장중 환율 차트를 추가했습니다.',''],
+  ['exchange','2026-04-25','시작','FX Signal Lab의 시작','달러·엔화 환율을 확인하고 매수·매도 신호를 살펴보는 프로젝트를 시작했습니다.',''],
   // blog-history:start
   ["youtube", "2026-09-02", "블로그 · 최초 작성", "AI스럽지 않은 글쓰기", "번역투, 균등한 분량, 추상적인 표현을 사례로 살펴봅니다.", "blog/ai-tone-writing/index.html"],
   ["youtube", "2026-10-09", "블로그 · 최초 작성", "AI 활용, 어디까지 배워야 할까요?", "파일·Git·에이전트의 기초부터 첫 프로젝트까지.", "blog/ai-use-learning-path/index.html"],
@@ -31,8 +34,8 @@ const updates = [
   ['game','2026-05-04','새 게임','Starfall Lock-On·No-Guess Mine','조준 슈팅 게임과 추측 없이 풀 수 있는 지뢰찾기를 게임 목록에 추가했습니다.',''],
   ['game','2026-05-04','시작','Lilarca 게임 허브','고양이 모험과 Flappy Bird를 플레이하는 웹 게임 허브를 만들고, 한국어·영어 전환과 게임 스크린샷을 추가했습니다.','']
 ].sort((a,b)=>b[1].localeCompare(a[1]));
-const names={math:'수학 마을',youtube:'Still Thinking.log',game:'게임 실험실'};
-const icons={math:'assets/math-icon.webp',youtube:'assets/logo.png',game:'assets/lilarca.ico'};
+const names={math:'수학 마을',youtube:'Still Thinking.log',game:'게임 실험실',exchange:'FX Signal Lab'};
+const icons={math:'assets/math-icon.webp',youtube:'assets/logo.png',game:'assets/lilarca.ico',exchange:'assets/fx-signal-lab.svg'};
 const list=document.querySelector('#update-list');
 function element(tag,text,className){const el=document.createElement(tag);el.textContent=text;if(className)el.className=className;return el;}
 function render(filter){
@@ -42,39 +45,34 @@ function render(filter){
   const item=element('li','');const meta=element('div','','update-meta');
   const projectLink=element('a','','update-project-link');projectLink.href='#'+project;projectLink.setAttribute('aria-label',names[project]+' 프로젝트로 이동');
   const icon=document.createElement('img');icon.src=icons[project];icon.alt='';icon.width=36;icon.height=36;projectLink.append(icon);
-  const time=element('time',date);time.dateTime=date;
+  const time=element('time',date.replaceAll('-', '.'));time.dateTime=date;
   meta.append(projectLink,time,element('span',names[project]+' · '+type));
   item.append(meta,element('h3',title),element('p',body));
   if(source.startsWith('blog/')){const a=element('a','글 읽기 →');a.href=source;item.append(a);}
   else if(source.startsWith('https:')){const a=element('a',project==='youtube'?'영상 보기 ↗':'Google Play 보기 ↗');a.href=source;a.target='_blank';a.rel='noopener noreferrer';item.append(a);}
   list.append(item);
  }
- document.querySelector('#update-count').textContent=shown.length+'개의 주요 기록';
  document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===filter)));
 }
-const tabs=[...document.querySelectorAll('[role="tab"]')];
+const navigation=[...document.querySelectorAll('.site-nav a')];
 function route(){
  const history=location.hash.startsWith('#history');const requested=location.hash.split('/')[1];const filter=Object.hasOwn(names,requested)?requested:'all';
  document.querySelector('#projects').hidden=history;document.querySelector('#history').hidden=!history;
- tabs.forEach((t,i)=>{const active=history?i===1:i===0;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;});
+ const activeSection=history?'#history/all':location.hash==='#blog'?'#blog':'#projects';
+ navigation.forEach(link=>{if(link.hash===activeSection)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});
  if(history)render(filter);
- if(document.activeElement.closest('[hidden]'))tabs[history?1:0].focus({preventScroll:true});
+ if(document.activeElement.closest('[hidden]'))navigation.find(link=>link.hash===activeSection).focus({preventScroll:true});
  const anchor=location.hash.slice(1);
- document.querySelectorAll('.project-nav a').forEach(a=>{if(a.hash===location.hash)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});
  if(!history && (Object.hasOwn(names,anchor)||anchor==='blog'))requestAnimationFrame(()=>document.getElementById(anchor).scrollIntoView({block:'start'}));
  if(history || anchor==='projects')window.scrollTo({top:0,behavior:'instant'});
 }
-tabs.forEach((tab,index)=>{
- tab.addEventListener('click',()=>{location.hash=index?'history/all':'projects';});
- tab.addEventListener('keydown',event=>{let next;if(['ArrowRight','ArrowLeft','ArrowUp','ArrowDown'].includes(event.key))next=1-index;else if(event.key==='Home')next=0;else if(event.key==='End')next=1;else return;event.preventDefault();tabs[next].focus();tabs[next].click();});
-});
 document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{location.hash='history/'+b.dataset.filter;}));
 document.querySelectorAll('[data-recent]').forEach(box=>{
  const project=box.dataset.recent;const recent=updates.filter(u=>u[0]===project).slice(0,3);
  const head=element('div','','recent-head');head.append(element('span','최근 History','tag'));
  const a=element('a','전체 보기 →');a.href='#history/'+project;head.append(a);box.append(head);
  const rows=element('ul','','recent-rows');
- for(const u of recent){const row=element('li','');const time=element('time',u[1]);time.dateTime=u[1];const title=element('span',u[3]);title.title=u[3];row.append(time,title);rows.append(row);}
+ for(const u of recent){const row=element('li','');const time=element('time',u[1].replaceAll('-', '.'));time.dateTime=u[1];const title=element('span',u[3]);title.title=u[3];row.append(time,title);rows.append(row);}
  box.append(rows);
 });
 window.addEventListener('hashchange',route);route();
