@@ -24,4 +24,6 @@
 @media(max-width:640px){.blog-index{scroll-margin-top:132px}.blog-list p{font-size:14px}}
 .blog-list a{display:flex;flex-direction:column}.blog-dates{display:block;align-self:flex-end;margin-top:auto;padding-top:16px;text-align:right;white-space:nowrap;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 
+.update-meta{align-items:center;gap:10px}.timeline .update-project-link{display:inline-flex;flex:none;margin:0;border-radius:8px}.update-project-link img{width:36px;height:36px;object-fit:contain;border-radius:8px}.update-project-link[href="#youtube"] img{background:#10221e;padding:4px}
+
 @media(max-width:380px){.sidebar{grid-template-columns:1fr}.view-tabs{justify-self:start}.project-nav{gap:6px}.project-nav a{padding:5px 3px}html{scroll-padding-top:175px}.project,.blog-index{scroll-margin-top:175px}}

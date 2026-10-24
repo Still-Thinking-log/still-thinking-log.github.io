@@ -32,6 +32,7 @@ const updates = [
   ['game','2026-05-04','시작','Lilarca 게임 허브','고양이 모험과 Flappy Bird를 플레이하는 웹 게임 허브를 만들고, 한국어·영어 전환과 게임 스크린샷을 추가했습니다.','']
 ].sort((a,b)=>b[1].localeCompare(a[1]));
 const names={math:'수학 마을',youtube:'Still Thinking.log',game:'게임 실험실'};
+const icons={math:'assets/math-icon.webp',youtube:'assets/logo.png',game:'assets/lilarca.ico'};
 const list=document.querySelector('#update-list');
 function element(tag,text,className){const el=document.createElement(tag);el.textContent=text;if(className)el.className=className;return el;}
 function render(filter){
@@ -39,8 +40,10 @@ function render(filter){
  const shown=updates.filter(u=>filter==='all'||u[0]===filter);
  for(const [project,date,type,title,body,source] of shown){
   const item=element('li','');const meta=element('div','','update-meta');
+  const projectLink=element('a','','update-project-link');projectLink.href='#'+project;projectLink.setAttribute('aria-label',names[project]+' 프로젝트로 이동');
+  const icon=document.createElement('img');icon.src=icons[project];icon.alt='';icon.width=36;icon.height=36;projectLink.append(icon);
   const time=element('time',date);time.dateTime=date;
-  meta.append(time,element('span',names[project]+' · '+type));
+  meta.append(projectLink,time,element('span',names[project]+' · '+type));
   item.append(meta,element('h3',title),element('p',body));
   if(source.startsWith('blog/')){const a=element('a','글 읽기 →');a.href=source;item.append(a);}
   else if(source.startsWith('https:')){const a=element('a',project==='youtube'?'영상 보기 ↗':'Google Play 보기 ↗');a.href=source;a.target='_blank';a.rel='noopener noreferrer';item.append(a);}
