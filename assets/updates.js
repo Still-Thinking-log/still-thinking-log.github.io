@@ -1,5 +1,6 @@
 // 공개 프로젝트의 주요 기능 기록.
 const updates = [
+  ['game','2026-10-25','새 게임','Dawn Gallery · 새벽에 사라지는 미술관','렌과 그림 속 세계를 여행하는 선택형 판타지 비주얼 노벨을 추가했습니다. 약속·기억·인물과의 관계에 따라 세 가지 결말로 이어지며, 회차별 이야기를 다시 읽고 PDF로 저장할 수 있습니다. 영어·한국어를 지원합니다.','https://lilarca.vercel.app/dawn-gallery'],
   ['exchange','2026-07-18','전략 · 개선','통화별 Swing 전략 개선','달러와 엔화에 서로 다른 Swing 전략 조건을 적용하고 과거 데이터 평가 기록을 정리했습니다.',''],
   ['exchange','2026-04-26','웹 · 기능 추가','환율 전략 시뮬레이션과 차트','전략별 과거 성과를 비교하는 대시보드와 장중 환율 차트를 추가했습니다.',''],
   ['exchange','2026-04-25','시작','FX Signal Lab의 시작','달러·엔화 환율을 확인하고 매수·매도 신호를 살펴보는 프로젝트를 시작했습니다.',''],
@@ -49,7 +50,7 @@ function render(filter){
   meta.append(projectLink,time,element('span',names[project]+' · '+type));
   item.append(meta,element('h3',title),element('p',body));
   if(source.startsWith('blog/')){const a=element('a','글 읽기 →');a.href=source;item.append(a);}
-  else if(source.startsWith('https:')){const a=element('a',project==='youtube'?'영상 보기 ↗':'Google Play 보기 ↗');a.href=source;a.target='_blank';a.rel='noopener noreferrer';item.append(a);}
+  else if(source.startsWith('https:')){const a=element('a',project==='youtube'?'영상 보기 ↗':project==='game'?'게임 플레이 ↗':'Google Play 보기 ↗');a.href=source;a.target='_blank';a.rel='noopener noreferrer';item.append(a);}
   list.append(item);
  }
  document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===filter)));
